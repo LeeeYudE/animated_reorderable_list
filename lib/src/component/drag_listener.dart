@@ -36,6 +36,7 @@ class ReorderableGridDragStartListener extends StatelessWidget {
           ? (PointerDownEvent event) => _startDragging(context, event)
           : null,
       child: child,
+      behavior: HitTestBehavior.opaque,
     );
   }
 
