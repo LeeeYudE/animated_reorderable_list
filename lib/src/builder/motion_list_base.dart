@@ -21,6 +21,7 @@ abstract class MotionListBase<W extends Widget, E extends Object>
   final ReorderCallback? onReorder;
   final void Function(int)? onReorderStart;
   final void Function(int)? onReorderEnd;
+  final void Function(Offset delta)? onReorderUpdate;
   final ReorderItemProxyDecorator? proxyDecorator;
   final List<AnimationEffect>? enterTransition;
   final List<AnimationEffect>? exitTransition;
@@ -39,6 +40,7 @@ abstract class MotionListBase<W extends Widget, E extends Object>
       this.onReorder,
       this.onReorderEnd,
       this.onReorderStart,
+      this.onReorderUpdate,
       this.proxyDecorator,
       this.enterTransition,
       this.exitTransition,
@@ -94,6 +96,8 @@ abstract class MotionListBaseState<
   @nonVirtual
   @protected
   void Function(int)? get onReorderEnd => widget.onReorderEnd;
+
+  void Function(Offset delta)? get onReorderUpdate => widget.onReorderUpdate;
 
   @nonVirtual
   @protected

@@ -22,6 +22,7 @@ class MotionBuilder<E> extends StatefulWidget {
   final ReorderCallback? onReorder;
   final void Function(int index)? onReorderStart;
   final void Function(int index)? onReorderEnd;
+  final void Function(Offset offset)? onReorderUpdate;
 
   final ReorderItemProxyDecorator? proxyDecorator;
   final ItemBuilder itemBuilder;
@@ -38,6 +39,7 @@ class MotionBuilder<E> extends StatefulWidget {
       this.onReorder,
       this.onReorderEnd,
       this.onReorderStart,
+      this.onReorderUpdate,
       this.proxyDecorator,
       this.initialCount = 0,
       this.delegateBuilder,
@@ -193,6 +195,7 @@ class MotionBuilderState extends State<MotionBuilder>
   }
 
   void _dragUpdate(_DragInfo item, Offset position, Offset delta) {
+    widget.onReorderUpdate?.call(delta);
     setState(() {
       _overlayEntry?.markNeedsBuild();
       _dragUpdateItems();

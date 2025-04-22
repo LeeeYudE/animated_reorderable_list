@@ -67,6 +67,7 @@ class AnimatedReorderableGridView<E extends Object> extends StatelessWidget {
   ///
   /// The index parameter of the callback is the index of the selected item.
   final void Function(int)? onReorderStart;
+  final void Function(Offset delta)? onReorderUpdate;
 
   /// A callback that is called when the dragged item is dropped.
   ///
@@ -188,6 +189,7 @@ class AnimatedReorderableGridView<E extends Object> extends StatelessWidget {
     this.removeDuration,
     this.onReorderStart,
     this.onReorderEnd,
+    this.onReorderUpdate,
     this.proxyDecorator,
     this.padding,
     this.scrollDirection = Axis.vertical,
@@ -231,6 +233,7 @@ class AnimatedReorderableGridView<E extends Object> extends StatelessWidget {
               onReorder: onReorder,
               onReorderStart: onReorderStart,
               onReorderEnd: onReorderEnd,
+              onReorderUpdate: onReorderUpdate,
               proxyDecorator: proxyDecorator,
               scrollDirection: scrollDirection,
               insertItemBuilder: insertItemBuilder,
