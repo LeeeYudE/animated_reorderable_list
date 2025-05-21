@@ -22,8 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AnimationType appliedStyle = AnimationType.fadeIn;
-  List<User> list =
-      List.generate(8, (index) => User(name: "User $index", index: index));
+  List<User> list = List.generate(8, (index) => User(name: "User $index", index: index));
   int addedNumber = 9;
   bool isGrid = true;
 
@@ -56,16 +55,12 @@ class _HomePageState extends State<HomePage> {
                 child: DropdownButton<AnimationType>(
                     iconEnabledColor: Colors.black87,
                     value: appliedStyle,
-                    items:
-                        AnimationType.values.map((AnimationType animationType) {
+                    items: AnimationType.values.map((AnimationType animationType) {
                       return DropdownMenuItem<AnimationType>(
                         value: animationType,
                         child: Text(
                           animationType.name.capitalize(),
-                          style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500),
+                          style: const TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.w500),
                         ),
                       );
                     }).toList(),
@@ -74,8 +69,7 @@ class _HomePageState extends State<HomePage> {
                         return;
                       }
                       animations = [];
-                      AnimationEffect animation =
-                          AnimationProvider.buildAnimation(animationType);
+                      AnimationEffect animation = AnimationProvider.buildAnimation(animationType);
                       animations.add(animation);
                       setState(() {
                         appliedStyle = animationType;
@@ -89,19 +83,13 @@ class _HomePageState extends State<HomePage> {
                 onPressed: insert,
                 child: const Text(
                   'ADD',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500),
+                  style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
                 )),
             TextButton(
                 onPressed: remove,
                 child: const Text(
                   'DEL',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500),
+                  style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
                 ))
           ],
         ),
@@ -131,8 +119,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )),
                   ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
                     onPressed: () {
                       setState(() {
                         if (isGrid != true) {
@@ -158,14 +145,13 @@ class _HomePageState extends State<HomePage> {
                     ? AnimatedReorderableGridView(
                         items: list,
                         scrollDirection: Axis.vertical,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ItemCard(
-                              key: Key(list[index].name),
-                              index: list[index].index);
+                        onReorderLongTap: (int index) {
+                          print('onReorderLongTap');
                         },
-                        sliverGridDelegate:
-                            SliverReorderableGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4),
+                        itemBuilder: (BuildContext context, int index) {
+                          return ItemCard(key: Key(list[index].name), index: list[index].index);
+                        },
+                        sliverGridDelegate: SliverReorderableGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
                         enterTransition: animations,
                         exitTransition: animations,
                         insertDuration: const Duration(milliseconds: 300),
@@ -208,9 +194,7 @@ class _HomePageState extends State<HomePage> {
                     : AnimatedReorderableListView(
                         items: list,
                         itemBuilder: (BuildContext context, int index) {
-                          return ItemTile(
-                              key: Key(list[index].name),
-                              index: list[index].index);
+                          return ItemTile(key: Key(list[index].name), index: list[index].index);
                         },
                         enterTransition: animations,
                         exitTransition: animations,

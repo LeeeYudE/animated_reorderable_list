@@ -17,11 +17,13 @@ class MotionListImpl<E extends Object> extends MotionListBase<Widget, E> {
       void Function(int)? onReorderStart,
       void Function(int)? onReorderEnd,
       void Function(Offset delta)? onReorderUpdate,
+      void Function(int)? onReorderLongTap,
       ReorderItemProxyDecorator? proxyDecorator,
       required Axis scrollDirection,
       AnimatedWidgetBuilder? insertItemBuilder,
       AnimatedWidgetBuilder? removeItemBuilder,
-      bool? buildDefaultDragHandles})
+      bool? buildDefaultDragHandles,
+      bool disableDrag = false})
       : super(
             key: key,
             items: items,
@@ -38,6 +40,7 @@ class MotionListImpl<E extends Object> extends MotionListBase<Widget, E> {
             scrollDirection: scrollDirection,
             insertItemBuilder: insertItemBuilder,
             removeItemBuilder: removeItemBuilder,
+            onReorderLongTap: onReorderLongTap,
             buildDefaultDragHandles: buildDefaultDragHandles);
 
   const MotionListImpl.grid(
@@ -51,13 +54,15 @@ class MotionListImpl<E extends Object> extends MotionListBase<Widget, E> {
       void Function(int)? onReorderStart,
       void Function(int)? onReorderEnd,
       void Function(Offset delta)? onReorderUpdate,
+      void Function(int)? onReorderLongTap,
       ReorderItemProxyDecorator? proxyDecorator,
       Duration? insertDuration,
       Duration? removeDuration,
       required Axis scrollDirection,
       AnimatedWidgetBuilder? insertItemBuilder,
       AnimatedWidgetBuilder? removeItemBuilder,
-      bool? buildDefaultDragHandles})
+      bool? buildDefaultDragHandles,
+      bool disableDrag = false})
       : super(
             key: key,
             items: items,
@@ -71,6 +76,7 @@ class MotionListImpl<E extends Object> extends MotionListBase<Widget, E> {
             onReorderStart: onReorderStart,
             onReorderEnd: onReorderEnd,
             onReorderUpdate: onReorderUpdate,
+            onReorderLongTap: onReorderLongTap,
             proxyDecorator: proxyDecorator,
             scrollDirection: scrollDirection,
             insertItemBuilder: insertItemBuilder,
@@ -81,8 +87,7 @@ class MotionListImpl<E extends Object> extends MotionListBase<Widget, E> {
   MotionListImplState<E> createState() => MotionListImplState<E>();
 }
 
-class MotionListImplState<E extends Object>
-    extends MotionListBaseState<Widget, MotionListImpl<E>, E> {
+class MotionListImplState<E extends Object> extends MotionListBaseState<Widget, MotionListImpl<E>, E> {
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterialLocalizations(context));
@@ -94,6 +99,7 @@ class MotionListImplState<E extends Object>
       onReorderStart: onReorderStart,
       onReorderEnd: onReorderEnd,
       onReorderUpdate: onReorderUpdate,
+      onReorderLongTap: onReorderLongTap,
       proxyDecorator: proxyDecorator,
       insertAnimationBuilder: insertAnimationBuilder,
       removeAnimationBuilder: removeAnimationBuilder,

@@ -4,24 +4,22 @@ import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 import 'package:flutter/material.dart';
 import 'motion_animated_builder.dart';
 
-typedef ItemBuilder<W extends Widget, E> = Widget Function(
-    BuildContext context, int index);
+typedef ItemBuilder<W extends Widget, E> = Widget Function(BuildContext context, int index);
 
-typedef AnimatedWidgetBuilder<W extends Widget, E> = Widget Function(
-    Widget child, Animation<double> animation);
+typedef AnimatedWidgetBuilder<W extends Widget, E> = Widget Function(Widget child, Animation<double> animation);
 
 typedef EqualityChecker<E> = bool Function(E, E);
 
 const Duration kAnimationDuration = Duration(milliseconds: 300);
 
-abstract class MotionListBase<W extends Widget, E extends Object>
-    extends StatefulWidget {
+abstract class MotionListBase<W extends Widget, E extends Object> extends StatefulWidget {
   final ItemBuilder<W, E> itemBuilder;
   final List<E> items;
   final ReorderCallback? onReorder;
   final void Function(int)? onReorderStart;
   final void Function(int)? onReorderEnd;
   final void Function(Offset delta)? onReorderUpdate;
+  final void Function(int)? onReorderLongTap;
   final ReorderItemProxyDecorator? proxyDecorator;
   final List<AnimationEffect>? enterTransition;
   final List<AnimationEffect>? exitTransition;
@@ -41,6 +39,7 @@ abstract class MotionListBase<W extends Widget, E extends Object>
       this.onReorderEnd,
       this.onReorderStart,
       this.onReorderUpdate,
+      this.onReorderLongTap,
       this.proxyDecorator,
       this.enterTransition,
       this.exitTransition,
@@ -54,10 +53,8 @@ abstract class MotionListBase<W extends Widget, E extends Object>
       : super(key: key);
 }
 
-abstract class MotionListBaseState<
-    W extends Widget,
-    B extends MotionListBase<W, E>,
-    E extends Object> extends State<B> with TickerProviderStateMixin {
+abstract class MotionListBaseState<W extends Widget, B extends MotionListBase<W, E>, E extends Object> extends State<B>
+    with TickerProviderStateMixin {
   late List<E> oldList;
 
   Duration _enterDuration = kAnimationDuration;
@@ -98,6 +95,8 @@ abstract class MotionListBaseState<
   void Function(int)? get onReorderEnd => widget.onReorderEnd;
 
   void Function(Offset delta)? get onReorderUpdate => widget.onReorderUpdate;
+
+  void Function(int)? get onReorderLongTap => widget.onReorderLongTap;
 
   @nonVirtual
   @protected
@@ -151,8 +150,7 @@ abstract class MotionListBaseState<
     oldList = List.from(newList);
   }
 
-  void addEffects(List<AnimationEffect> effects, List<EffectEntry> enteries,
-      {required bool enter}) {
+  void addEffects(List<AnimationEffect> effects, List<EffectEntry> enteries, {required bool enter}) {
     if (effects.isNotEmpty) {
       for (AnimationEffect effect in effects) {
         addEffect(effect, enteries, enter: enter);
@@ -162,18 +160,14 @@ abstract class MotionListBaseState<
     }
   }
 
-  void addEffect(AnimationEffect effect, List<EffectEntry> enteries,
-      {required bool enter}) {
+  void addEffect(AnimationEffect effect, List<EffectEntry> enteries, {required bool enter}) {
     Duration zero = Duration.zero;
-    final timeForAnimation =
-        (effect.delay ?? zero) + (effect.duration ?? kAnimationDuration);
+    final timeForAnimation = (effect.delay ?? zero) + (effect.duration ?? kAnimationDuration);
     if (enter) {
-      _enterDuration =
-          timeForAnimation > _enterDuration ? timeForAnimation : _enterDuration;
+      _enterDuration = timeForAnimation > _enterDuration ? timeForAnimation : _enterDuration;
       assert(_enterDuration >= zero, "Duration can not be negative");
     } else {
-      _exitDuration =
-          timeForAnimation > _exitDuration ? timeForAnimation : _exitDuration;
+      _exitDuration = timeForAnimation > _exitDuration ? timeForAnimation : _exitDuration;
       assert(_exitDuration >= zero, "Duration can not be negative");
     }
 
@@ -203,15 +197,13 @@ abstract class MotionListBaseState<
 
   @nonVirtual
   @protected
-  Widget insertAnimationBuilder(
-      BuildContext context, Widget child, Animation<double> animation) {
+  Widget insertAnimationBuilder(BuildContext context, Widget child, Animation<double> animation) {
     if (widget.insertItemBuilder != null) {
       return widget.insertItemBuilder!(child, animation);
     } else {
       Widget animatedChild = child;
       for (EffectEntry entry in _enterAnimations) {
-        animatedChild = entry.animationEffect
-            .build(context, animatedChild, animation, entry, insertDuration);
+        animatedChild = entry.animationEffect.build(context, animatedChild, animation, entry, insertDuration);
       }
       return animatedChild;
     }
@@ -219,15 +211,13 @@ abstract class MotionListBaseState<
 
   @nonVirtual
   @protected
-  Widget removeAnimationBuilder(
-      BuildContext context, Widget child, Animation<double> animation) {
+  Widget removeAnimationBuilder(BuildContext context, Widget child, Animation<double> animation) {
     if (widget.removeItemBuilder != null) {
       return widget.removeItemBuilder!(child, animation);
     } else {
       Widget animatedChild = child;
       for (EffectEntry entry in _exitAnimations) {
-        animatedChild = entry.animationEffect
-            .build(context, animatedChild, animation, entry, removeDuration);
+        animatedChild = entry.animationEffect.build(context, animatedChild, animation, entry, removeDuration);
       }
       return animatedChild;
     }
